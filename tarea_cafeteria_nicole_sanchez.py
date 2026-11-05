@@ -95,9 +95,9 @@ while True: #Crea un bucle que se repetirá indefinidamente hasta que el código
         
     elif opcion == 'c':
         print("\n--- TU PEDIDO ACTUAL ---")
-        # 6. Validar si el pedido está vacío
+        #Validar si el pedido está vacío
         if not pedido_actual:
-            print("Tu pedido actualmente está vacío.\n")
+            print("Tu pedido actual está vacío.\n")
         else:
             subtotal_parcial = 0.0
             for producto, cantidad in pedido_actual.items():
