@@ -10,7 +10,7 @@ cafeteria_menu = {
     "frapucchino": 2.000,
     "croissant": 1.500,
     "pastel de frutos rojos": 1.000,
-    "jugo de naranja": 0.850,
+    "jugo de naranja": 850,
     "Crepa de fresas": 1.900
     }
 
@@ -34,9 +34,25 @@ while True: #Crea un bucle que se repetirá indefinidamente hasta que el código
     
     opcion = input("Elige una opción (a/b/c/d): ").lower().strip()
     # el .lower convierte la entrada del usuario a minúsculas, y el .strip() elimina espacios en blanco al inicio y al final de la cadena.
+    
     # 4. Validación de opción inexistente
     if opcion not in ['a', 'b', 'c', 'd']:
         print("\n[ERROR] Opción no válida. Por favor, selecciona una opción entre 'a', 'b', 'c' o 'd'.\n")
         continue  # Salta a la siguiente iteración del bucle while
     #La validación y continue: Si el usuario escribe una letra que no está permitida, el condicional if detecta el error, muestra un mensaje y utiliza continue. 
     #La sentencia continue hace que Python ignore lo que resta del bucle en ese turno y vuelva directamente al inicio a mostrar el menú de opciones otra vez.
+    
+    #Parte 5 opción A - Ver el Menú (Diccionarios y Enumerate) y opcion B - Agregar Producto (Bucle For/Else y Validaciones)
+    
+    # Opción A: Ver el menú de productos utilizando .items() (claves y valores)
+    if opcion == 'a':
+        print("\n--- *MENÚ DE LA CAFETERÍA *---")
+        # Recorrido del diccionario accediendo tanto a la clave (producto) como al valor (precio)
+        for indice, (producto, precio) in enumerate(cafeteria_menu.items(), start=1):
+            print(f"{indice}. {producto.capitalize()} - ₡{precio:.3f}")
+        print("-" * 30 + "\n")
+        
+    #.items(): Este método extrae tanto las claves (productos) como los valores (precios) del diccionario al mismo tiempo.
+    #enumerate(..., start=1): Nos ayuda a generar un número autoincrementable (1, 2, 3...) para listar los productos en pantalla de forma ordenada.
+    #.capitalize(): Convierte la primera letra del nombre del producto en mayúscula para que se vea más estético.
+    #₡{precio:.3f}: Fuerza a que el número decimal se imprima siempre con exactamente dos decimales (por ejemplo, mostrará 2.50 en lugar de 2.5), cumpliendo con el formato monetario.
