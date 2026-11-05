@@ -9,8 +9,8 @@ cafeteria_menu = {
     "cappuccino": 1.850,
     "frapucchino": 2.000,
     "croissant": 1.500,
-    "pastel de frutos rojos": 1.000,
-    "jugo de naranja": 850,
+    "pastel de frutos rojos": 1.500,
+    "jugo de naranja": 1.000,
     "Crepa de fresas": 1.900
     }
 
@@ -52,7 +52,106 @@ while True: #Crea un bucle que se repetirá indefinidamente hasta que el código
             print(f"{indice}. {producto.capitalize()} - ₡{precio:.3f}")
         print("-" * 30 + "\n")
         
-    #.items(): Este método extrae tanto las claves (productos) como los valores (precios) del diccionario al mismo tiempo.
-    #enumerate(..., start=1): Nos ayuda a generar un número autoincrementable (1, 2, 3...) para listar los productos en pantalla de forma ordenada.
-    #.capitalize(): Convierte la primera letra del nombre del producto en mayúscula para que se vea más estético.
-    #₡{precio:.3f}: Fuerza a que el número decimal se imprima siempre con exactamente dos decimales (por ejemplo, mostrará 2.50 en lugar de 2.5), cumpliendo con el formato monetario.
+    # .items(): Este método extrae tanto las claves (productos) como los valores (precios) del diccionario al mismo tiempo.
+    # enumerate(..., start=1): Nos ayuda a generar un número autoincrementable (1, 2, 3...) para listar los productos en pantalla de forma ordenada.
+    # .capitalize(): Convierte la primera letra del nombre del producto en mayúscula para que se vea más estético.
+    # ₡{precio:.3f}: Fuerza a que el número decimal se imprima siempre con exactamente dos decimales (por ejemplo, mostrará 2.50 en lugar de 2.5), cumpliendo con el formato monetario.
+  
+   # Opción B: Agregar un producto al pedido
+    elif opcion == 'b':
+        print("\n--- AGREGAR PRODUCTO A TU PEDIDO ---")
+        producto_ingresado = input("Ingresa el nombre del producto que deseas agregar: ").lower().strip()
+        
+        # Búsqueda del producto utilizando un bucle for con una estructura for/else
+        producto_encontrado = False
+        for producto_menu in cafeteria_menu:
+            if producto_menu == producto_ingresado:
+                producto_encontrado = True
+                break # Rompe el bucle al encontrar el producto
+        else:
+            # Este bloque se ejecuta únicamente si el bucle termina sin hacer un break
+            print(f"Lo sentimos, '{producto_ingresado}' no existe en nuestro menú.\n")
+            continue
+        
+        # 5. Solicitar la cantidad asegurando que sea un número entero mayor a cero
+        while True:
+            try:
+                cantidad = int(input(f"Ingresa la cantidad para '{producto_ingresado}': "))
+                if cantidad > 0:
+                    break
+                print("La cantidad debe ser mayor a cero.")
+            except ValueError:
+                print("Por favor, ingresa un número entero válido.")
+        
+        # Agregar o actualizar el producto en el diccionario del pedido
+        if producto_ingresado in pedido_actual:
+            pedido_actual[producto_ingresado] += cantidad
+        else:
+            pedido_actual[producto_ingresado] = cantidad
+            
+        print(f"¡Se han agregado {cantidad} unidad(es) de '{producto_ingresado}' a tu pedido!\n") 
+       
+        #Opcion C: Ver el pedido actual
+        
+    elif opcion == 'c':
+        print("\n--- TU PEDIDO ACTUAL ---")
+        # 6. Validar si el pedido está vacío
+        if not pedido_actual:
+            print("Tu pedido actualmente está vacío.\n")
+        else:
+            subtotal_parcial = 0.0
+            for producto, cantidad in pedido_actual.items():
+                precio_unitario = cafeteria_menu[producto]
+                subtotal_producto = precio_unitario * cantidad
+                subtotal_parcial += subtotal_producto
+                print(f"- {producto.capitalize()} | Cantidad: {cantidad} | Subtotal: ${subtotal_producto:.2f}")
+            print(f"Subtotal acumulado: ₡{subtotal_parcial:.2f}\n")
+            
+    # if not pedido_actual:: Comprueba si el diccionario del pedido está vacío. Si lo está, avisa al usuario.
+    #Cálculo de subtotales: Recorre cada producto seleccionado, busca su precio en el menú original, lo multiplica por la cantidad pedida e imprime el detalle acumulando un subtotal general parcial
+    
+    # Opción D: Finalizar el pedido y salir
+    elif opcion == 'd':
+        if not pedido_actual:
+            print("\nNo tienes ningún producto en tu pedido. ¡Esperamos verte pronto!")
+            break
+        
+        print("\n--- FINALIZAR PEDIDO ---")
+        
+        # Calcular el subtotal general antes de la propina
+        subtotal_general = 0.0
+        for producto, cantidad in pedido_actual.items():
+            subtotal_general += cafeteria_menu[producto] * cantidad
+            
+        #Solicitar el porcentaje de propina validando el rango de 0 a 100
+        while True:
+            try:
+                porcentaje_propina = float(input("Ingresa el porcentaje de propina que deseas dejar (0 a 100): "))
+                if 0 <= porcentaje_propina <= 100:
+                    break
+                print("El porcentaje debe estar entre 0 y 100.")
+            except ValueError:
+                print("Por favor, ingresa un número válido.")
+                
+        # Cálculos monetarios finales
+        monto_propina = subtotal_general * (porcentaje_propina / 100)
+        total_a_pagar = subtotal_general + monto_propina
+        
+        # Mostrar el resumen detallado utilizando f-strings y formato de dos decimales
+        print("\n" + "="*40)
+        print("          RESUMEN DE TU COMPRA          ")
+        print("="*40)
+        print(f"Cliente: {nom_cliente.capitalize()}")
+        print("Detalle:")
+        for producto, cantidad in pedido_actual.items():
+            costo_item = cafeteria_menu[producto] * cantidad
+            print(f"  • {producto.capitalize()} (x{cantidad}) - ${costo_item:.2f}")
+        print("-" * 40)
+        print(f"Subtotal:       ${subtotal_general:.2f}")
+        print(f"Propina ({porcentaje_propina}%): ${monto_propina:.2f}")
+        print(f"Total a pagar:  ${total_a_pagar:.2f}")
+        print("="*40)
+        print("¡Gracias por tu compra en la Cafetería! ¡Que tengas un excelente día!\n")
+        
+        # Terminar el bucle principal y cerrar el programa
+        break
